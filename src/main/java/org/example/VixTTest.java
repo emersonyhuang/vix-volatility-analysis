@@ -9,9 +9,9 @@ import java.util.List;
 public class VixTTest {
 
     public static void main(String[] args) {
-        String basePath = "C:\\Users\\BC-Tech\\IdeaProjects\\Statsproject\\";
-        String earningsFile = basePath + "earnings_group_sample.csv";
-        String quietFile = basePath + "quiet_group_sample.csv";
+        String dataDir = "data/";
+        String earningsFile = dataDir + "earnings_group_sample.csv";
+        String quietFile = dataDir + "quiet_group_sample.csv";
 
         List<Double> earningsSwings = readSwings(earningsFile);
         List<Double> quietSwings = readSwings(quietFile);

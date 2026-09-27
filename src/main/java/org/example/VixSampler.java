@@ -10,23 +10,24 @@ import java.util.*;
 public class VixSampler {
 
     public static void main(String[] args) {
-        // --- CONFIGURATION: EXACT ABSOLUTE PATHS TO YOUR FILES ---
-        String basePath = "C:\\Users\\BC-Tech\\IdeaProjects\\Statsproject\\";
+        // --- CONFIGURATION ---
+        String dataDir = "data/";
 
-        String datePoolFile = basePath + "MarchJuneSeptemberDecember.csv";
-        String vixDataFile = basePath + "VIX_History.csv";
-        String outputFile = basePath + "quiet_group_sample.csv";
+        String datePoolFile = dataDir + "MarchJuneSeptemberDecember.csv";
+        String vixDataFile = dataDir + "VIX_History.csv";
+        String outputFile = dataDir + "quiet_group_sample.csv";
 
-        // Target months: Earnings (1, 4, 7, 10).
-        // For the quiet months run, change this to: Arrays.asList(3, 6, 9, 12);
-        // And change datePoolFile to basePath + "MarchJuneSeptemberDecember.csv" and outputFile to basePath + "quiet_group_sample.csv"
+        // Target months: quiet months (3, 6, 9, 12).
+        // For the earnings-season run, change this to: Arrays.asList(1, 4, 7, 10),
+        // datePoolFile to dataDir + "JanuaryAprilJulyOctober.csv", and outputFile
+        // to dataDir + "earnings_group_sample.csv"
         List<Integer> targetMonths = Arrays.asList(3, 6, 9, 12);
         int yearsStart = 2021;
         int yearsEnd = 2025;
-        // -------------------------------------------------------------
+        // ---------------------
 
         Map<String, String> dayOfWeekMap = new HashMap<>();
-        // Group days strictly by Month ID (e.g., Key "1" holds ALL January days from 2021-2025)
+        // Group days strictly by month ID (e.g. key "1" holds ALL January days from 2021-2025)
         Map<Integer, List<String>> monthsMasterPool = new HashMap<>();
 
         System.out.println("Step 1: Reading and pooling available dates by month...");
@@ -119,18 +120,18 @@ public class VixSampler {
                         finalizedSampleDates.add(candidateDate);
                         successfulPicks++;
                     } else {
-                        System.out.println("♻️ Holiday found (" + candidateDate + "). Searching grand pool for another day instead.");
+                        System.out.println("Holiday found (" + candidateDate + "). Searching pool for another day instead.");
                     }
                     poolIndex++;
                 }
 
                 if (successfulPicks < 10) {
-                    System.out.println("⚠️ Warning: Could only find " + successfulPicks + " valid days total for Month ID: " + month);
+                    System.out.println("Warning: could only find " + successfulPicks + " valid days total for month ID: " + month);
                 }
             }
         }
 
-        System.out.println("Step 4: Computing High-Low swings and exporting finalized data...");
+        System.out.println("Step 4: Computing high-low swings and exporting finalized data...");
 
         try (PrintWriter pw = new PrintWriter(new FileWriter(outputFile))) {
             pw.println("Date,Day_of_Week,Daily_Volatility_Swing");
@@ -148,7 +149,7 @@ public class VixSampler {
                     successfullyMatched++;
                 }
             }
-            System.out.println("🎉 Done! Successfully generated '" + outputFile + "' with exactly " + successfullyMatched + " records.");
+            System.out.println("Done! Successfully generated '" + outputFile + "' with exactly " + successfullyMatched + " records.");
         } catch (IOException e) {
             System.err.println("Error writing output file: " + e.getMessage());
         }
